@@ -1,0 +1,26 @@
+# dependencies
+/node_modules
+
+# next
+/.next
+/out
+
+# production
+/build
+
+# local data + secrets
+.env
+.env.local
+*.db
+*.db-journal
+/prisma/dev.db
+/uploads
+
+# generated demo files + screenshots (reproduce with `npm run demo:certs`)
+/demo
+
+# misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+/coverage

@@ -1,0 +1,20 @@
+[
+  {
+    "reference": "EMP-001",
+    "driverName": "John Smith",
+    "vehicleRegistration": "AB12 CDE",
+    "vehicleMakeModel": "Ford Transit"
+  },
+  {
+    "reference": "EMP-002",
+    "driverName": "Sarah Patel",
+    "vehicleRegistration": "LD68 KPH",
+    "vehicleMakeModel": "Vauxhall Vivaro"
+  },
+  {
+    "reference": "EMP-003",
+    "driverName": "Michael O'Connor",
+    "vehicleRegistration": "GH19 XYZ",
+    "vehicleMakeModel": "Mercedes Sprinter"
+  }
+]

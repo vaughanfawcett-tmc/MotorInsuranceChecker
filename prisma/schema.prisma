@@ -1,0 +1,75 @@
+// Prisma schema for Business Insurance Checks.
+//
+// Dev/local uses SQLite (zero setup). For production, change `provider` to
+// "postgresql" and point DATABASE_URL at Postgres. JSON payloads are stored as
+// strings so the schema is identical across both engines.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// One uploaded document and its validation outcome.
+model Submission {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// Reference used to look up the authoritative TMC record (e.g. employee id).
+  tmcReference String
+
+  // File metadata.
+  originalFilename String
+  mediaType        String
+  fileSize         Int
+  /// SHA-256 of the file bytes; used for duplicate detection.
+  fileSha256       String
+  /// Where the uploaded file was persisted on disk.
+  storedPath       String
+
+  /// "claude" if a document was actually read, "mock" otherwise.
+  extractionMode String
+
+  /// Final decision: APPROVED | REJECTED | MANUAL_REVIEW (see domain/constants).
+  status String
+
+  // Serialised JSON payloads (validated by Zod when read back).
+  extractionJson       String?
+  checksJson           String?
+  rejectionReasonsJson String?
+
+  // Manual review outcome (null until a reviewer acts).
+  reviewedBy String?
+  reviewedAt DateTime?
+  reviewNote String?
+
+  auditLogs AuditLog[]
+
+  @@index([status])
+  @@index([fileSha256])
+  @@index([tmcReference])
+}
+
+/// Append-only audit trail. Rows are never updated or deleted.
+model AuditLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  submissionId String
+
+  /// Who acted: "system" or a reviewer identifier.
+  actor  String
+  /// What happened, e.g. SUBMISSION_RECEIVED, DECISION_RECORDED, REVIEW_APPROVED.
+  action String
+  /// Human-readable explanation (the "why").
+  detail String
+  /// Optional structured context as JSON.
+  metadataJson String?
+
+  @@index([submissionId, createdAt])
+}
