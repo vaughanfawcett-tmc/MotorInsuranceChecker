@@ -1,15 +1,17 @@
 // Prisma schema for Business Insurance Checks.
 //
-// Dev/local uses SQLite (zero setup). For production, change `provider` to
-// "postgresql" and point DATABASE_URL at Postgres. JSON payloads are stored as
-// strings so the schema is identical across both engines.
+// Postgres in all environments. DATABASE_URL points at the database; for local
+// development run a Postgres container or a hosted dev branch and set the URL in
+// .env. JSON payloads are stored as strings, so models are storage-agnostic.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" for local dev; the rhel target is the runtime Vercel/AWS Lambda uses.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

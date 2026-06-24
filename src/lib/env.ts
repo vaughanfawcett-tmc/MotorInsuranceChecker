@@ -8,8 +8,8 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 
-  // Postgres in production; SQLite file for local/dev. One string to switch.
-  DATABASE_URL: z.string().min(1).default("file:./dev.db"),
+  // Postgres connection string (all environments).
+  DATABASE_URL: z.string().min(1, "DATABASE_URL is required (Postgres URL)"),
 
   // Shared secret the intake caller must present (Authorization: Bearer <secret>).
   INTAKE_SHARED_SECRET: z.string().min(16, "INTAKE_SHARED_SECRET must be >= 16 chars"),

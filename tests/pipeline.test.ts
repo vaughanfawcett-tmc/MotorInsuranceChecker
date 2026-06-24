@@ -5,7 +5,16 @@ import { processSubmission, type PipelineDeps } from "@/services/pipeline";
 import { SeedTmcClient } from "@/services/tmc/seed-tmc-client";
 import { MockExtractor } from "@/services/extraction/mock-extractor";
 import type { Extractor } from "@/services/extraction/extractor";
+import type { FileStore } from "@/services/storage/file-store";
 import { tmcRecord } from "./helpers";
+
+/** In-memory file store: records puts without touching disk. */
+function fakeFileStore(): FileStore {
+  return {
+    put: async ({ key, mediaType }) =>
+      Promise.resolve({ location: `memory://${key}.${mediaType.split("/")[1]}` }),
+  };
+}
 
 /** Minimal in-memory stand-in for the Prisma client used by the pipeline. */
 function fakeDb(prior: { id: string } | null = null) {
@@ -37,6 +46,7 @@ function deps(overrides: Partial<PipelineDeps> = {}): PipelineDeps {
     tmc: SeedTmcClient.fromRecords([tmcRecord({ reference: "EMP-001" })]),
     extractor: new MockExtractor(),
     extractionMode: "mock",
+    fileStore: fakeFileStore(),
     confidenceThreshold: 0.7,
     now: () => new Date("2026-06-22T09:00:00Z"),
     ...overrides,

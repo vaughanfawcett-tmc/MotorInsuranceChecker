@@ -1,6 +1,7 @@
 import { loadEnv } from "@/lib/env";
 import { prisma } from "@/lib/db";
 import { createExtractor } from "./extraction/factory";
+import { createFileStore } from "./storage/factory";
 import { SeedTmcClient } from "./tmc/seed-tmc-client";
 import type { PipelineDeps } from "./pipeline";
 
@@ -18,6 +19,7 @@ export async function buildPipelineDeps(): Promise<PipelineDeps> {
     tmc,
     extractor,
     extractionMode: mode,
+    fileStore: createFileStore(),
     confidenceThreshold: env.CONFIDENCE_THRESHOLD,
     now: () => new Date(),
   };

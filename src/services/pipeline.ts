@@ -1,6 +1,4 @@
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import type { PrismaClient } from "@prisma/client";
 import { Decision } from "@/domain/constants";
 import { validateCertificate } from "@/domain/validate";
@@ -11,9 +9,8 @@ import type {
   Extractor,
   SupportedMediaType,
 } from "./extraction/extractor";
+import type { FileStore } from "./storage/file-store";
 import type { TmcClient } from "./tmc/tmc-client";
-
-const UPLOADS_DIR = join(process.cwd(), "uploads");
 
 export interface SubmissionInput {
   readonly tmcReference: string;
@@ -27,6 +24,7 @@ export interface PipelineDeps {
   readonly tmc: TmcClient;
   readonly extractor: Extractor;
   readonly extractionMode: ExtractionMode;
+  readonly fileStore: FileStore;
   readonly confidenceThreshold: number;
   /** Injected clock keeps the pipeline testable and deterministic. */
   readonly now: () => Date;
@@ -36,13 +34,6 @@ export interface PipelineResult {
   readonly submissionId: string;
   readonly decision: Decision;
 }
-
-const extensionFor: Record<SupportedMediaType, string> = {
-  "application/pdf": "pdf",
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
 
 /**
  * End-to-end intake pipeline (I/O edge): persist the file, extract, look up the
@@ -58,10 +49,12 @@ export async function processSubmission(
   const sha256 = createHash("sha256").update(input.bytes).digest("hex");
 
   // Persist the original file (named by content hash so identical files dedupe).
-  await mkdir(UPLOADS_DIR, { recursive: true });
-  const storedName = `${sha256}.${extensionFor[input.mediaType]}`;
-  const storedPath = join("uploads", storedName);
-  await writeFile(join(UPLOADS_DIR, storedName), input.bytes);
+  const stored = await deps.fileStore.put({
+    key: sha256,
+    bytes: input.bytes,
+    mediaType: input.mediaType,
+  });
+  const storedPath = stored.location;
 
   const priorDuplicate = await db.submission.findFirst({
     where: { fileSha256: sha256 },
