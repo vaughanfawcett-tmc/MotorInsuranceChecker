@@ -1,10 +1,6 @@
 import Link from "next/link";
-import {
-  ShieldCheck,
-  Inbox,
-  Upload as UploadIcon,
-  LogOut,
-} from "lucide-react";
+import Image from "next/image";
+import { Inbox, Upload as UploadIcon, LogOut } from "lucide-react";
 import { logout } from "../auth-actions";
 
 type NavKey = "submissions" | "upload";
@@ -14,7 +10,7 @@ const NAV: { key: NavKey; href: string; label: string; Icon: typeof Inbox }[] = 
   { key: "upload", href: "/upload", label: "Upload", Icon: UploadIcon },
 ];
 
-/** Authenticated app frame: fixed sidebar nav + scrolling content area. */
+/** Authenticated app frame: fixed dark brand sidebar + scrolling content area. */
 export function AppShell({
   active,
   children,
@@ -24,15 +20,16 @@ export function AppShell({
 }) {
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="hidden lg:flex flex-col border-r border-line bg-surface">
-        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-line">
-          <span className="grid place-items-center size-8 rounded-lg bg-accent text-white">
-            <ShieldCheck className="size-4.5" strokeWidth={2.25} />
-          </span>
-          <div className="leading-tight">
-            <div className="font-semibold tracking-tight">Insurance Checks</div>
-            <div className="text-xs text-muted">Certificate validation</div>
-          </div>
+      <aside className="hidden lg:flex flex-col bg-brand-dark text-zinc-300">
+        <div className="flex items-center h-16 px-5 border-b border-white/10">
+          <Image
+            src="/brand/tmc-logo-white.png"
+            alt="The Miles Consultancy"
+            width={130}
+            height={68}
+            priority
+            className="h-8 w-auto"
+          />
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
@@ -46,8 +43,8 @@ export function AppShell({
                 className={[
                   "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   current
-                    ? "bg-zinc-100 text-ink"
-                    : "text-muted hover:text-ink hover:bg-zinc-50",
+                    ? "bg-white/10 text-white"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5",
                 ].join(" ")}
               >
                 <Icon className="size-4" strokeWidth={2} />
@@ -57,11 +54,11 @@ export function AppShell({
           })}
         </nav>
 
-        <div className="p-3 border-t border-line">
+        <div className="p-3 border-t border-white/10">
           <form action={logout}>
             <button
               type="submit"
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted hover:text-ink hover:bg-zinc-50 transition-colors"
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
             >
               <LogOut className="size-4" strokeWidth={2} />
               Sign out
@@ -71,20 +68,22 @@ export function AppShell({
       </aside>
 
       {/* Mobile top bar */}
-      <header className="lg:hidden flex items-center justify-between h-14 px-4 border-b border-line bg-surface">
-        <div className="flex items-center gap-2">
-          <span className="grid place-items-center size-7 rounded-md bg-accent text-white">
-            <ShieldCheck className="size-4" strokeWidth={2.25} />
-          </span>
-          <span className="font-semibold tracking-tight">Insurance Checks</span>
-        </div>
+      <header className="lg:hidden flex items-center justify-between h-14 px-4 bg-brand-dark">
+        <Image
+          src="/brand/tmc-logo-white.png"
+          alt="The Miles Consultancy"
+          width={110}
+          height={57}
+          priority
+          className="h-7 w-auto"
+        />
         <div className="flex items-center gap-3 text-sm">
           {NAV.map(({ key, href, label }) => (
             <Link
               key={key}
               href={href}
               className={
-                key === active ? "text-ink font-medium" : "text-muted"
+                key === active ? "text-white font-medium" : "text-zinc-400"
               }
             >
               {label}

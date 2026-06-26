@@ -44,7 +44,7 @@ export default async function UploadPage({
                 type="text"
                 placeholder="e.g. EMP-001"
                 autoComplete="off"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent-ring"
               />
               <p className="mt-1.5 text-sm text-muted">
                 The driver/vehicle reference used to look up the TMC record.
@@ -69,7 +69,7 @@ export default async function UploadPage({
 
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
             >
               <UploadCloud className="size-4" /> Validate document
             </button>

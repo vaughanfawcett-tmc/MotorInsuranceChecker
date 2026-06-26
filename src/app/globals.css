@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Calm, professional, one accent (indigo). The palette leans on
- * Tailwind's zinc/indigo/emerald/amber/red scales; these semantic aliases keep
- * component markup readable.
+ * Design tokens. Calm, professional, one accent. Brand is The Miles Consultancy
+ * (TMC): orange #ef7128 on a near-black sidebar, Open Sans typography. The
+ * palette otherwise leans on Tailwind's zinc/emerald/amber/red scales; these
+ * semantic aliases keep component markup readable.
  */
 @theme {
   --color-canvas: var(--color-zinc-50);
@@ -11,10 +12,18 @@
   --color-ink: var(--color-zinc-900);
   --color-muted: var(--color-zinc-500);
   --color-line: var(--color-zinc-200);
-  --color-accent: var(--color-indigo-600);
 
-  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+  /* TMC brand orange. */
+  --color-accent: #ef7128;
+  --color-accent-hover: #d65f1e;
+  --color-accent-ring: #fde3d1;
+
+  /* Dark brand surface (sidebar, login mark) the white logo sits on. */
+  --color-brand-dark: #1f2123;
+
+  /* Open Sans is the TMC web font; --font-open-sans is injected by next/font. */
+  --font-sans: var(--font-open-sans), ui-sans-serif, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 html,

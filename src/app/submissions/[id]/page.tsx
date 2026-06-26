@@ -231,14 +231,14 @@ export default async function SubmissionDetail({
                   id="note"
                   name="note"
                   rows={3}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent-ring"
                 />
                 <div className="flex gap-2.5">
                   <button
                     type="submit"
                     name="decision"
                     value={Decision.APPROVED}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
                   >
                     <CircleCheck className="size-4" /> Approve
                   </button>
