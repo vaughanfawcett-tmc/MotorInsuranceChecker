@@ -147,6 +147,28 @@ input), `500` (logged server-side).
 
 ---
 
+## Driver upload links (signed, no login)
+
+The intended production flow: the TMC portal mints a signed link for a driver
+and the driver uploads their certificate without logging in. The link carries
+the expected driver name and registration, HMAC-signed, so the values the
+certificate is matched against cannot be tampered with.
+
+Mint a link (the portal calls this, authenticated with the intake secret):
+
+```bash
+curl -X POST http://localhost:3000/api/upload-links \
+  -H "Authorization: Bearer $INTAKE_SHARED_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"reference":"EMP-001","driverName":"John Smith","vehicleRegistration":"AB12 CDE"}'
+# -> 201 {"url":"http://localhost:3000/u/<signed-token>"}
+```
+
+The driver opens that URL (`/u/[token]`), uploads the document, and sees a
+plain-language result. No TMC lookup happens: the match record comes from the
+signed token. Links default to a 7-day lifetime (`ttlSeconds` overrides it).
+`UPLOAD_LINK_SECRET` must match between the portal and this app.
+
 ## The reviewer dashboard
 
 - **/** - submissions list with status counts and filters (All / Manual review /

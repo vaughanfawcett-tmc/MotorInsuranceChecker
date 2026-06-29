@@ -18,6 +18,9 @@ const envSchema = z.object({
   DASHBOARD_PASSWORD: z.string().min(8, "DASHBOARD_PASSWORD must be >= 8 chars"),
   // Used to sign session cookies (HMAC).
   SESSION_SECRET: z.string().min(16, "SESSION_SECRET must be >= 16 chars"),
+  // Used to sign driver upload links (HMAC). The portal mints links with the
+  // same secret; the app verifies them. Tamper-proofs the expected driver+reg.
+  UPLOAD_LINK_SECRET: z.string().min(16, "UPLOAD_LINK_SECRET must be >= 16 chars"),
 
   // Extraction provider keys. Precedence: OpenAI, then Anthropic, then the
   // deterministic mock extractor (dev/test only) if neither key is set.
