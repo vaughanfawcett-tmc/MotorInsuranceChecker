@@ -22,8 +22,16 @@ const envSchema = z.object({
   // same secret; the app verifies them. Tamper-proofs the expected driver+reg.
   UPLOAD_LINK_SECRET: z.string().min(16, "UPLOAD_LINK_SECRET must be >= 16 chars"),
 
-  // Extraction provider keys. Precedence: OpenAI, then Anthropic, then the
-  // deterministic mock extractor (dev/test only) if neither key is set.
+  // Extraction provider keys. Precedence: Azure OpenAI, then OpenAI, then
+  // Anthropic, then the deterministic mock extractor (dev/test only).
+
+  // Azure OpenAI (preferred: supports EU/UK data residency). All three of
+  // endpoint, key, and deployment must be set to enable it.
+  AZURE_OPENAI_ENDPOINT: z.string().url().optional(),
+  AZURE_OPENAI_API_KEY: z.string().optional(),
+  AZURE_OPENAI_DEPLOYMENT: z.string().optional(),
+  AZURE_OPENAI_API_VERSION: z.string().default("2025-04-01-preview"),
+
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().default("gpt-4o"),
 

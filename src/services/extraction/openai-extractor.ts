@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI, { AzureOpenAI } from "openai";
 import {
   certificateExtractionSchema,
   type CertificateExtraction,
@@ -70,13 +70,35 @@ const RESPONSE_SCHEMA = {
 
 /** OpenAI vision adapter: combined OCR + structured extraction via the Responses API. */
 export class OpenAIExtractor implements Extractor {
-  private readonly client: OpenAI;
-
+  /**
+   * Accepts a pre-built client and the model (openai.com) or deployment name
+   * (Azure). The `openai` SDK's OpenAI and AzureOpenAI clients share the same
+   * `.responses` interface, so one extractor serves both providers.
+   */
   constructor(
-    apiKey: string,
+    private readonly client: OpenAI | AzureOpenAI,
     private readonly model: string,
-  ) {
-    this.client = new OpenAI({ apiKey });
+  ) {}
+
+  /** Convenience factory for openai.com (API key + model). */
+  static forOpenAI(apiKey: string, model: string): OpenAIExtractor {
+    return new OpenAIExtractor(new OpenAI({ apiKey }), model);
+  }
+
+  /** Convenience factory for Azure OpenAI (endpoint + key + deployment). */
+  static forAzure(params: {
+    endpoint: string;
+    apiKey: string;
+    deployment: string;
+    apiVersion: string;
+  }): OpenAIExtractor {
+    const client = new AzureOpenAI({
+      endpoint: params.endpoint,
+      apiKey: params.apiKey,
+      apiVersion: params.apiVersion,
+      deployment: params.deployment,
+    });
+    return new OpenAIExtractor(client, params.deployment);
   }
 
   async extract(input: DocumentInput): Promise<CertificateExtraction> {

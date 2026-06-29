@@ -20,7 +20,7 @@ async function main(): Promise<void> {
       : "image/jpeg";
   if (!isSupportedMediaType(mediaType)) throw new Error("unsupported");
 
-  const extractor = new OpenAIExtractor(apiKey, process.env.OPENAI_MODEL ?? "gpt-4o");
+  const extractor = OpenAIExtractor.forOpenAI(apiKey, process.env.OPENAI_MODEL ?? "gpt-4o");
   const result = await extractor.extract({
     bytes: readFileSync(path),
     mediaType,

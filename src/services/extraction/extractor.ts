@@ -22,7 +22,7 @@ export interface DocumentInput {
 }
 
 /** Which extraction backend produced a result. Recorded on each submission. */
-export type ExtractionMode = "openai" | "claude" | "mock";
+export type ExtractionMode = "azure" | "openai" | "claude" | "mock";
 
 /**
  * Port for the OCR + structured-extraction layer. The Claude adapter reads real

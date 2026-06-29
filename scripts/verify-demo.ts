@@ -18,7 +18,7 @@ async function main(): Promise<void> {
   const record = await tmc.getRecord("EMP-001");
   if (!record) throw new Error("EMP-001 fixture missing");
 
-  const extractor = new OpenAIExtractor(apiKey, process.env.OPENAI_MODEL ?? "gpt-4o");
+  const extractor = OpenAIExtractor.forOpenAI(apiKey, process.env.OPENAI_MODEL ?? "gpt-4o");
 
   for (const file of FILES) {
     const bytes = readFileSync(new URL(`../demo/${file}`, import.meta.url));
